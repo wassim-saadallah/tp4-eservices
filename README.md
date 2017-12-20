@@ -5,8 +5,8 @@ This git repository serve the purpose of showing how we managed to **_dockerize_
 * Docker
 * The steps
   * What we'll need
-  * _Dockerfile_
-  * Deploying the microservices in their corresponding instances
+  * Deploying the microservices as an excutable JAR file
+  * Deploying the microservices using the maven plugin
   * _Dockercompose_
 
 # What we have
@@ -37,10 +37,14 @@ Now let's start building some containers!
 # The Steps
 
 ## What we'll need
-- [Docker](https://www.docker.com/get-docker) (For windows 10 Pro install Docker or for Windows or install "Docker tools" on previous systems)
+- Install [Docker](https://www.docker.com/get-docker) (For windows 10 Pro install Docker or for Windows or install "Docker tools" on previous systems)
 - Text Editor or an IDE
 - Terminal
 - Some Patience
+
+**PS** : In the case of installing the Docker tools it will require installing VirtualBox cause the containers will be ran on a linux machine. Docker for Windows uses _Hyper-V_ technology provided by windows 10.
+
+The final project structre looks like this : 
 
 ```
 ├───product-service
@@ -54,14 +58,44 @@ Now let's start building some containers!
 └───docker-compose.yml
 ```
 
-There are **two ways** to deploy your services into docker container but the two of them require setting up a **Dockerfile** first  
-## Dockerfile
-this file contains the set of commands that the docker command line will execute on build
-in our case a _dockerfile_ looks like this
+There are **two ways** to deploy your Spring Boot microservices into docker container.  
+
+  1. Creating a docker image from the JAR file
+  2. Using _Spotify_'s maven-docker plugin 
+
+## Deploying the microservices as an executable JAR file
+
+### 1. Building the excutable jar file
+
+Using Maven build the service with the command
+```cmd
+c:/projects/config-service> mvnw install 
+``` 
+The result looks like this  
+
+<p align="center"><img src="Capture.png"/></p>
+
+### 2. Dockerfile
+this file contains the set of commands that the docker command line will execute on build. We will use this file in the two methods.
+in the case of _config-service_ a _dockerfile_ looks like this
 ```Dockerfile
 FROM openjdk:8
-ADD target/config-spring-boot.jar config-spring-boot.jar
+ADD target/product-spring-boot.jar product-spring-boot.jar
 EXPOSE 8888
-ENTRYPOINT ["java", "-jar", "config-spring-boot.jar"]
-CMD	java -Dfile.encoding=UTF-8 -Djava.security.egd=file:/dev/./urandom -jar /config-spring-boot.jar
+ENTRYPOINT ["java", "-jar", "product-spring-boot.jar"]
 ```
+This file will  
+1. Get the **openjdk:8** image (it will be downloaded if it's not existing),  
+2. **ADD** the result jar file to the docker image,
+3. then it **EXPOSES** the port 8888 of the container,
+4. The last command (or _step_) is the command line to run the container.
+
+We invoke this Dockerfile and build our docker image by wrinting this command in the docker terminal at you root project (Docker Quickstart Terminal in case of Docker Tools)
+
+```bash
+$ cd path/to/project 
+$ docker build -f Dockerfile -t product-spring-boot
+```
+An output should looks like this
+
+<p align="center"><img src="Capture2.png"/></p>
