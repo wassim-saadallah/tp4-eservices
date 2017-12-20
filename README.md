@@ -15,7 +15,16 @@ When building our microservices, we ensured that we respect a number of design p
 The final architecture of the application looks like this  
 <p align="center"><img src="archi.png"/></p>  
 
-to dockerize these microservices we will use [Docker](https://www.docker.com).  
+An overview of the service is provided by the table below  
+
+Name | Role | Port 
+--- | --- | --- |  
+product Service | The main service, an API for listing products | 8080
+config Service | The configuration service used to centrelize all the app's configuration | 8888  
+Discovery Service | A registery service for the application instances to get discovered by other services|8761
+Proxy Service| An API Gateway for request routing and load balancing|9999  
+
+to _containerize_ these microservices we will use [Docker](https://www.docker.com).  
 
 # Docker
 According to [wikipedia](https://en.wikipedia.org)
