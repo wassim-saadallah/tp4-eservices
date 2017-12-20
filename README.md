@@ -99,3 +99,10 @@ $ docker build -f Dockerfile -t product-spring-boot
 An output should looks like this
 
 <p align="center"><img src="Capture2.png"/></p>
+
+We repeat this process on the remain project and voilà! all the project are sleeping inside the docker images.  
+We can check on them using the command
+```bash
+$ docker images
+```
+<p align="center"><img src="Capture2.png"/></p>
